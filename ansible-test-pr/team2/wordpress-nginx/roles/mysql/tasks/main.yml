@@ -1,24 +1,30 @@
 ---
 - name: Install Mysql
-  yum: name={{ item }} state=present
-  with_items:
-   - mysql-server
-   - MySQL-python
-
-- name: Install Selinux
-  yum: name={{ item }} state=present
-  with_items:
-   - libselinux-python
-   - libsemanage-python
-
-- name: Configure SELinux to start mysql on any port
-  seboolean: name=mysql_connect_any state=true persistent=yes
-
-- name: Create Mysql configuration file
-  template: src=my.cnf.j2 dest=/etc/my.cnf
+  yum: 
+   name: "{{ item }}" 
+   state: present
+  loop: "{{ packages_SQL }}"
 
 - name: Start Mysql Service
-  service: name=mysqld state=started enabled=yes
+  service: 
+   name: mysqld 
+   state: started 
+   enabled: yes
 
-- name: restart mysql
-  service: name=mysqld state=restarted
+- name: Install Selinux
+  yum: 
+   name: "{{ item }}" 
+   state: present
+  loop: "{{ packages_SE }}"
+
+- name: Configure SELinux to start mysql on any port
+  seboolean: 
+   name: 'mysql_connect_any' 
+   state: yes
+   persistent: yes
+
+- name: Create Mysql configuration file
+  template: 
+   src: my.cnf.j2 
+   dest: /etc/my.cnf
+  notify: restart mysql

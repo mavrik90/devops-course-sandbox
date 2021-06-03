@@ -1,0 +1,4 @@
+wordpress: 
+  home: /srv/wordpress/
+  user: wordpress
+  group: wordpress
