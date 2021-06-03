@@ -1,0 +1,6 @@
+packages_SQL:
+   - mysql-server
+   - MySQL-python
+packages_SE:
+   - libselinux-python
+   - libsemanage-python
