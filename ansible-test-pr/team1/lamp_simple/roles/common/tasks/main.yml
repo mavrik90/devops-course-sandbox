@@ -10,20 +10,18 @@
   template:
     src: ntp.conf.j2
     dest: /etc/ntp.conf
-  tags: ntp
-
-- name: restart ntp
-  service:
-    name: ntpd
-    state: restarted
-
-- name: Start the ntp service
-  service:
-    state: started
-    enabled: yes
+  notify:
+    - restart ntp
   tags: ntp
 
 - name: test to see if selinux is running
   command: getenforce
   register: sestatus
   changed_when: false
+
+- name: Start the ntp service
+  service:
+    name: ntpd
+    state: started
+    enabled: yes
+  tags: start_ntp

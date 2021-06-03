@@ -4,6 +4,23 @@
 
 mysqlservice: mysqld
 mysql_port: 3306
-dbuser: foouser
-dbname: foodb
-upassword: abc
+
+db:
+  user: foouser
+  name: foodb
+  password: abc
+
+mysql_apps:
+  - mysql-server
+  - MySQL-python
+  - libselinux-python
+  - libsemanage-python
+
+mysql_conf:
+  - { src: my.cnf.j2, dest: /etc/my.cnf}
+
+iptables_rule:
+  - { path: /etc/sysconfig/iptables, state: present, regexp: 3306,  insertafter: ^:OUTPUT, line: -A INPUT -p tcp  --dport {{ mysql_port }} -j  ACCEPT }
+
+mysql:
+  - { name: foouser, password: abc, priv: "*.*:ALL", host: "%", state: present }
